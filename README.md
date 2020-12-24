@@ -7,7 +7,7 @@
 
  **`settings.json` file must be in the same location as application**
 
-```
+```json
 {
     "apiKey": "******************************************************",
     "commanderPort": "5000",
@@ -33,11 +33,13 @@ Checks if the command is still running in the background. If the command has sto
 
 ### POST `/send-command`
 
-Takes the `command` param that is sent and sends it to the input buffer of the background task
+Takes the `command` param from the json body that is sent and sends it to the input buffer of the background task
 
-parameter | description | required 
---- | --- | ---
-command | Text that is sent to the input buffer of the background task | yes
+``` json
+{
+    "command": "echo \"hello world!\""
+}
+```
 
 ### GET `/stop`
 

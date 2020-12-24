@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"helper"
 	"middleware"
@@ -56,13 +57,16 @@ func main() {
 		})
 	})
 
+	type CommandBody struct {
+		Command string `json:"command"`
+	}
 	http.HandleFunc("/send-command", func(w http.ResponseWriter, r *http.Request) {
 		middleware.Authenticate(settings, w, r, func(w http.ResponseWriter, r *http.Request) {
-			r.ParseForm()
-			httpCommand := r.PostForm.Get("command")
-			fmt.Println("HTTP COMMAND", httpCommand)
+			var data CommandBody
+			json.NewDecoder(r.Body).Decode(&data)
+			fmt.Println("HTTP COMMAND", data.Command)
 
-			cmdInput.Write([]byte(httpCommand + "\n"))
+			cmdInput.Write([]byte(data.Command + "\n"))
 
 			w.Write([]byte("OK!"))
 		})
