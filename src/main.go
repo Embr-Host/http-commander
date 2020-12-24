@@ -34,12 +34,25 @@ func main() {
 				return
 			}
 
-			for cmd.ProcessState == nil {
+			for cmd.ProcessState == nil && r.Context().Err() == nil {
 				outputBuffer := helper.StreamOutputBuffer(cmdOutput, bufferSize)
 				writeResponse := sseStart + outputBuffer + sseEnd
-				w.Write([]byte(writeResponse))
-				flusher.Flush()
+				if r.Context().Err() == nil {
+					w.Write([]byte(writeResponse))
+					flusher.Flush()
+				}
 			}
+
+			hijacker := w.(http.Hijacker)
+			conn, readBuffer, err := hijacker.Hijack()
+			_ = readBuffer
+
+			if err != nil {
+				fmt.Println(err, "Unknown error has occurred... Attempting to close ideal connection")
+				http.DefaultClient.CloseIdleConnections()
+			}
+
+			conn.Close()
 		})
 	})
 
