@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
 
 func main() {
 
@@ -8,7 +12,9 @@ func main() {
 
 	for input != "exit" {
 		fmt.Println("Waiting for command...")
-		fmt.Scanln(&input)
-		fmt.Println("Command Entered: ", input)
+		scanner := bufio.NewScanner(os.Stdin)
+		scanner.Scan()
+		input = scanner.Text()
+		fmt.Println("Command Entered:", input)
 	}
 }
