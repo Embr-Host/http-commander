@@ -3,6 +3,7 @@ package helper
 import (
 	"fmt"
 	"io"
+	"time"
 )
 
 // StreamOutputBuffer returns the next buffer output from cmdOutput as a string.
@@ -19,6 +20,7 @@ func StreamOutputBuffer(cmdOutput io.ReadCloser, bufferSize int) string {
 	if err != nil {
 		fmt.Println("Logger has stopped", err)
 		errMessage := "Application has exited"
+		time.Sleep(5 * time.Second)
 		return errMessage
 	}
 
