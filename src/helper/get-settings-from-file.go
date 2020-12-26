@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 )
 
 // CommanderSettings type for settings.json
@@ -28,6 +29,18 @@ func GetSettingsFromFile(filepath string) CommanderSettings {
 	err = json.Unmarshal(data, &settings)
 	if err != nil {
 		fmt.Println("error:", err)
+	}
+
+	if settings.APIKey == "" {
+		settings.APIKey = os.Getenv("COMMANDER_API_KEY")
+	}
+
+	if settings.CommanderPort == "" {
+		settings.CommanderPort = os.Getenv("COMMANDER_PORT")
+	}
+
+	if settings.StartCommand == "" {
+		settings.StartCommand = os.Getenv("COMMANDER_START_CMD")
 	}
 
 	return settings
